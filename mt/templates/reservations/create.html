@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Создать бронь{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2 class="text-center">Создать бронь</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-warning w-100">Сохранить</button>
+        </form>
+
+        <!-- Список бронирований (внизу) -->
+        <h3 class="mt-4">Существующие бронирования</h3>
+        <ul class="list-group">
+            {% for reservation in reservations %}
+                <li class="list-group-item">
+                    {{ reservation.customer.name }} забронировал стол №{{ reservation.table.number }} на {{ reservation.date }} ({{ reservation.status }})
+
+                    {% if is_admin %}
+                        <!-- Показать кнопки только если пользователь администратор -->
+                        <a href="/reservations/{{ reservation.id }}/edit/" class="btn btn-warning btn-sm float-end mx-2">Редактировать</a>
+                        <a href="/reservations/{{ reservation.id }}/delete/" class="btn btn-danger btn-sm float-end">Удалить</a>
+                    {% endif %}
+                </li>
+            {% empty %}
+                <li class="list-group-item">Нет активных бронирований.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <a href="{% url 'home' %}" class="btn btn-back mt-3">Вернуться на главную</a>
+
+{% endblock %}

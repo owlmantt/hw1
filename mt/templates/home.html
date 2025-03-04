@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система бронирования</title>
+    <!-- Подключаем Bootstrap для быстрого оформления -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            text-align: center;
+            margin-top: 50px;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .btn {
+            margin: 15px;
+            padding: 20px 40px;
+            font-size: 1.5rem;
+            border-radius: 12px;
+            width: 250px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .btn-success {
+            background-color: #28a745;
+            border: none;
+        }
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        .btn-warning {
+            background-color: #ffc107;
+            border: none;
+        }
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .navbar {
+            background-color: #343a40;
+        }
+        .navbar-brand {
+            color: white !important;
+        }
+        .navbar-nav .nav-link {
+            color: white !important;
+        }
+        .navbar-toggler-icon {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Система бронирования</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'create_customer' %}">Добавить клиента</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'create_table' %}">Добавить стол</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'create_reservation' %}">Создать бронь</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1>Добро пожаловать в систему бронирования!</h1>
+        <p>Выберите раздел в меню ниже.</p>
+        
+        <a href="{% url 'create_customer' %}" class="btn btn-primary">Клиенты</a>
+        <a href="{% url 'create_table' %}" class="btn btn-success">Столики</a>
+        <a href="{% url 'create_reservation' %}" class="btn btn-warning">Бронирования</a>
+        {% if not is_admin %}
+        <h2>Вход как администратор</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Войти</button>
+        </form>
+    {% else %}
+        <!-- Если пользователь администратор, показываем кнопки -->
+        <a href="{% url 'admin_dashboard' %}">Перейти в админ-панель</a>
+        <button>Изменить</button>
+        <button>Удалить</button>
+    {% endif %}
+        <br><br>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

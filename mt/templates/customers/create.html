@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить клиента{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2 class="text-center">Добавить клиента</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary w-100">Сохранить</button>
+        </form>
+
+        <!-- Список клиентов (внизу) -->
+        <h3 class="mt-4">Существующие клиенты</h3>
+        <ul class="list-group">
+            {% for customer in customers %}
+                <li class="list-group-item">
+                    {{ customer.name }} ({{ customer.phone }})
+
+                    {% if is_admin %}
+                        <!-- Показать кнопки только если пользователь администратор -->
+                        <a href="/customers/{{ customer.id }}/edit/" class="btn btn-warning btn-sm float-end mx-2">Редактировать</a>
+                        <a href="/customers/{{ customer.id }}/delete/" class="btn btn-danger btn-sm float-end">Удалить</a>
+                    {% endif %}
+                </li>
+            {% empty %}
+                <li class="list-group-item">Нет зарегистрированных клиентов.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <a href="{% url 'home' %}" class="btn btn-back mt-3">Вернуться на главную</a>
+
+{% endblock %}
