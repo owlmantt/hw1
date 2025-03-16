@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Админ панель{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2 class="text-center">Админ панель</h2>
+
+        <h3>Список столиков</h3>
+        <ul class="list-group">
+            {% for table in tables %}
+                <li class="list-group-item">
+                    Стол №{{ table.number }} - {{ table.seats }} мест
+                    <a href="{% url 'table_edit' table.id %}" class="btn btn-warning btn-sm float-end mx-2">Редактировать</a>
+                    <a href="{% url 'table_delete' table.id %}" class="btn btn-danger btn-sm float-end">Удалить</a>
+                </li>
+            {% empty %}
+                <li class="list-group-item">Нет доступных столов.</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

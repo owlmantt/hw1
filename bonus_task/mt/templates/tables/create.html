@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить стол{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2 class="text-center">Добавить стол</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success w-100">Сохранить</button>
+        </form>
+
+        <!-- Список столов (внизу) -->
+        <h3 class="mt-4">Существующие столы</h3>
+        <ul class="list-group">
+            {% for table in tables %}
+                <li class="list-group-item">
+                    Стол №{{ table.number }} - {{ table.seats }} мест ({{ table.is_available|yesno:"Свободен,Занят" }})
+                    
+                    {% if is_admin %}
+                        <!-- Показать кнопки только если пользователь администратор -->
+                        <a href="/tables/{{ table.id }}/edit/" class="btn btn-warning btn-sm float-end mx-2">Редактировать</a>
+                        <a href="/tables/{{ table.id }}/delete/" class="btn btn-danger btn-sm float-end">Удалить</a>
+                    {% endif %}
+                </li>
+            {% empty %}
+                <li class="list-group-item">Нет доступных столиков.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <a href="{% url 'home' %}" class="btn btn-back mt-3">Вернуться на главную</a>
+
+{% endblock %}
