@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from .models import TodoList, Todo
 from .forms import TodoListForm, TodoForm
 
@@ -14,24 +15,25 @@ def todo_detail(request, id):
 def todo_delete(request, id):
     todo_list = get_object_or_404(TodoList, id=id)
     todo_list.delete()
-    return redirect("todo_list")
+    return redirect("todo-list")  # Исправленный маршрут
 
 def todo_edit(request, id):
-    todo_list = get_object_or_404(TodoList, id=id)
+    todo = get_object_or_404(TodoList, id=id)
     if request.method == "POST":
-        form = TodoListForm(request.POST, instance=todo_list)
+        form = TodoListForm(request.POST, instance=todo)
         if form.is_valid():
             form.save()
-            return redirect("todo_detail", id=id)
+            return redirect('todo-detail', id=todo.id)
     else:
-        form = TodoListForm(instance=todo_list)
-    return render(request, "todos/todo_edit.html", {"form": form})
+        form = TodoListForm(instance=todo)
+
+    return render(request, 'todos/todo_edit.html', {'form': form, 'todo': todo})
 
 def task_delete(request, id):
     todo = get_object_or_404(Todo, id=id)
     list_id = todo.todo_list.id
     todo.delete()
-    return redirect("todo_detail", id=list_id)
+    return redirect(reverse("todo-detail", args=[list_id]))  # Исправленный редирект
 
 def task_edit(request, id):
     todo = get_object_or_404(Todo, id=id)
@@ -39,8 +41,8 @@ def task_edit(request, id):
         form = TodoForm(request.POST, instance=todo)
         if form.is_valid():
             form.save()
-            return redirect("todo_detail", id=todo.todo_list.id)
+            return redirect(reverse("todo-detail", args=[todo.todo_list.id]))  # Исправленный редирект
     else:
         form = TodoForm(instance=todo)
-    return render(request, "todos/todo_edit.html", {"form": form})
 
+    return render(request, "todos/todo_edit.html", {"form": form})
