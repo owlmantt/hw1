@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="post-card">
+        <h2>{{ object.title }}</h2>
+        <p>{{ object.content }}</p>
+        <small class="text-muted">
+            Опубликовано {{ object.created_at|date:"d.m.Y H:i" }} 
+            автором {{ object.author.username }}
+        </small>
+    </div>
+
+    <div class="mt-4">
+        <h4>Комментарии</h4>
+        
+        <form method="post" class="mb-4">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <button type="submit" class="btn btn-primary">Добавить комментарий</button>
+        </form>
+
+        {% for comment in object.comments.all %}
+            <div class="comment">
+                <p>{{ comment.text }}</p>
+                <small class="text-muted">
+                    {{ comment.author.username }} - {{ comment.created_at|timesince }} назад
+                </small>
+            </div>
+        {% empty %}
+            <div class="alert alert-info">Пока нет комментариев</div>
+        {% endfor %}
+    </div>
+{% endblock %}
